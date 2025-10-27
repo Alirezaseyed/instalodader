@@ -21,7 +21,7 @@ In tool behet komak mikone ta betooni az Instagram etela'at begiri ya download k
 
 Aval Python 3.x ro nasb kon.
 
-Ba'd file `requirements.txt` ro ba in mohtava besaz:
+Ba'd file `req.txt` ro ba in mohtava besaz:
 
 ```
 instaloader>=4.10
@@ -31,7 +31,7 @@ requests>=2.30
 Ba'd in command ro bezan ta hame library ha nasb beshan:
 
 ```bash
-pip install -r requirements.txt
+pip install -r req.txt
 ```
 
 ---
