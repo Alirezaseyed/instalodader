@@ -7,6 +7,7 @@ def get_profile_info(profile_name):
     
     try:
         profile = instaloader.Profile.from_username(L.context, profile_name)
+        profile_status = "Private" if profile.is_private else "Public"
         print(f"\nEtelaat profile: {profile_name}")
         print(f"Naam karbari: {profile.username}")
         print(f"Naam kaamel: {profile.full_name}")
@@ -15,6 +16,7 @@ def get_profile_info(profile_name):
         print(f"Tedaad postha: {profile.mediacount}")
         print(f"Biography: {profile.biography[:100] + '...' if profile.biography else 'Bedoon biography'}")
         print(f"Link profile: https://www.instagram.com/{profile.username}/")
+        print(f"Vaziat profile: {profile_status}")
         
         with open(f"{profile_name}_profile_info.txt", 'w', encoding='utf-8') as f:
             f.write(f"Naam karbari: {profile.username}\n")
@@ -24,6 +26,7 @@ def get_profile_info(profile_name):
             f.write(f"Tedaad postha: {profile.mediacount}\n")
             f.write(f"Biography: {profile.biography}\n")
             f.write(f"Link profile: https://www.instagram.com/{profile.username}/\n")
+            f.write(f"Vaziat profile: {profile_status}\n")
         print(f"Etelaat dar file {profile_name}_profile_info.txt zakhire shod.")
     except instaloader.exceptions.ProfileNotExistsException:
         print(f"Profile {profile_name} vojood nadarad.")
@@ -43,12 +46,10 @@ def get_reel_info(reel_link):
             print("In link mowred nazar reel ya video nist.")
             return
         
-        # Estekhraj hashtagha az caption
         hashtags = []
         if post.caption:
             hashtags = [word[1:] for word in post.caption.split() if word.startswith('#')]
         
-        # Estekhraj karbaran tagged
         tagged_users = []
         if post.tagged_users:
             tagged_users = post.tagged_users
