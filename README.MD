@@ -1,119 +1,124 @@
-# 📸 Instagram Info & Downloader CLI 
+# Instagram API
 
-In tool behet komak mikone ta betooni az Instagram etela'at begiri ya download koni — az profile, reel, story, highlight ta hashtag va location.
+This project is a simple **FastAPI**-based API that provides access to Instagram profile and reel information using the **instaloader** library.
 
----
+## Features
+- Retrieve Instagram profile details (username, full name, followers, followees, post count, biography, account status).
+- Fetch Instagram reel information (link, username, publish date, likes, views, caption, hashtags, tagged users).
+- Comprehensive error handling with appropriate HTTP responses.
 
-## 🚀 Features
+## Prerequisites
+To run this project, you need the following:
+- **Python 3.8+**
+- Python packages (listed in `requirements.txt`):
+  - `fastapi`
+  - `pydantic`
+  - `instaloader`
+  - `uvicorn` (for running the FastAPI server)
+- Internet connection for Instagram API communication
 
-* 🔍 Get profile info (username, full name, followers, followings, post count, bio, status)
-* 🎥 Get reel info (link, date, likes, views, caption, hashtags, tagged users)
-* 🌐 Test reel link (check accessibility)
-* 🖼 Download profile posts
-* 📚 Download stories va highlights
-* 🏷 Download tagged posts
-* 🔖 Download posts by hashtag
-* 📍 Download posts by location ID
+## Installation and Setup
+1. **Clone the Repository**:
+   ```bash
+   git clone <repository-url>
+   cd <project-directory>
+   ```
 
----
+2. **Install Dependencies**:
+   Create a virtual environment and install the required packages using the provided `requirements.txt` file:
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   pip install -r requirements.txt
+   ```
 
-## ⚙️ Installation
+3. **Run the Server**:
+   Start the FastAPI server with the following command:
+   ```bash
+   uvicorn main:app --reload
+   ```
+   The API will be available at `http://localhost:8000`. The `--reload` flag enables auto-reload for development.
 
-Aval Python 3.x ro nasb kon.
+## API Endpoints
 
-Ba'd file `req.txt` ro ba in mohtava besaz:
+### 1. Get Profile Information
+- **Endpoint**: `POST /profile`
+- **Description**: Retrieves details of an Instagram profile.
+- **Request Body**:
+  ```json
+  {
+    "username": "example_username"
+  }
+  ```
+- **Response** (Success):
+  ```json
+  {
+    "username": "example_username",
+    "full_name": "Example Name",
+    "followers": 1000,
+    "followees": 500,
+    "post_count": 50,
+    "biography": "This is a bio",
+    "profile_url": "https://www.instagram.com/example_username/",
+    "status": "Public"
+  }
+  ```
+- **Error Responses**:
+  - `404`: Profile does not exist.
+  - `403`: Profile is private, login required.
+  - `500`: Server error with details.
 
-```
-instaloader>=4.10
-requests>=2.30
-```
+### 2. Get Reel Information
+- **Endpoint**: `POST /reel`
+- **Description**: Retrieves details of an Instagram reel.
+- **Request Body**:
+  ```json
+  {
+    "link": "https://www.instagram.com/reel/ABC123/"
+  }
+  ```
+- **Response** (Success):
+  ```json
+  {
+    "link": "https://www.instagram.com/p/ABC123/",
+    "username": "example_username",
+    "date": "2023-10-27 14:30:00",
+    "likes": 500,
+    "views": 10000,
+    "caption": "This is a reel caption",
+    "hashtags": ["example", "reel"],
+    "tagged_users": ["user1", "user2"]
+  }
+  ```
+- **Error Responses**:
+  - `404`: Reel does not exist.
+  - `403`: Reel is private, login required.
+  - `400`: Provided link is not a reel or video.
+  - `500`: Server error with details.
 
-Ba'd in command ro bezan ta hame library ha nasb beshan:
+## Usage
+1. **Access the API**:
+   After starting the server, you can access the API at `http://localhost:8000`. Use a tool like **Postman**, **cURL**, or any HTTP client to send requests.
 
-```bash
-pip install -r req.txt
-```
+2. **Interactive API Documentation**:
+   FastAPI provides automatic Swagger UI documentation. Visit `http://localhost:8000/docs` to test the endpoints interactively.
 
----
+3. **Example cURL Commands**:
+   - Get profile info:
+     ```bash
+     curl -X POST "http://localhost:8000/profile" -H "Content-Type: application/json" -d '{"username": "example_username"}'
+     ```
+   - Get reel info:
+     ```bash
+     curl -X POST "http://localhost:8000/reel" -H "Content-Type: application/json" -d '{"link": "https://www.instagram.com/reel/ABC123/"}'
+     ```
 
-## 🧭 How to Run
+## Notes
+- **Rate Limits**: Instagram may impose rate limits on requests. The `instaloader` configuration in the code includes `sleep=True` and `max_connection_attempts=3` to handle this gracefully.
+- **Private Accounts**: Accessing private profiles or reels requires Instagram login credentials, which are not implemented in this code. Attempting to access private content will return a `403` error.
+- **Error Handling**: The API includes robust error handling for common issues like non-existent profiles, private content, or invalid reel links.
 
-File ro save kon ba name `main.py` va ejra kon:
-
-```bash
-python main.py
-```
-
-Bad az ejra, ye menu miyad ke mitooni az bein gozine ha entekhab koni.
-
----
-
-## 📋 Main Menu
-
-```
-1. Estekhraj etelaat account
-2. Estekhraj etelaat reel (az rooye link)
-3. Test link reel
-4. Download posthay profile
-5. Download storyha
-6. Download highlightha
-7. Download posthay tagged
-8. Download posthay hashtag
-9. Download posthay location
-10. Khorooj
-```
-
-Har gozine baraye ye kar khas hast:
-
-1️⃣ Info profile ro migire
-
-2️⃣ Reel link ro check mikone va etela’at midah
-
-3️⃣ Test mikone ke link kar mikone ya na
-
-4️⃣ Hame post haye profile ro download mikone
-
-5️⃣ Story ro download mikone
-
-6️⃣ Highlight ro download mikone
-
-7️⃣ Tagged post ro download mikone
-
-8️⃣ Hasteg post ro migire
-
-9️⃣ Post bar asas location ID ro migire
-
-🔟 Exit
-
----
-
-## 💾 Output Files
-
-Har file info ya download shode tu ye file ya folder zakhire mishe:
-
-* `{username}_profile_info.txt`
-* `{username}_reel_{shortcode}.txt`
-* Folder baraye post, story, highlight va ...
-
----
-
-## ⚠️ Important Notes
-
-* Agar profile private bashe bayad login koni.
-* Instaloader tool az session va sleep estefade mikone ta block nashi.
-* Be ghanon ha va rule haye Instagram ehteram bezar.
-* In tool faghat baraye karaye research va educational estefade mishe.
-
----
-
-## 🔑 Login (Optional)
-
-Agar mikhay be private profile ha dastresi dashte bashi, mitooni login koni:
-
-```python
-import instaloader
-L = instaloader.Instaloader()
-L.login('your_username', 'your_password')
-```
-
-
+## Troubleshooting
+- **Module Not Found**: Ensure all dependencies are installed correctly using `pip install -r requirements.txt`.
+- **Connection Issues**: Check your internet connection and ensure Instagram is accessible.
+- **Rate Limit Errors**: If Instagram blocks requests, try reducing the frequency of requests or configure `instaloader` with login credentials for authenticated access.
